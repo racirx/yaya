@@ -5,10 +5,15 @@ export PATH := $(PWD)/bin:$(PATH)
 
 VERSION ?= $(shell ./scripts/git-version)
 
+export GOBIN=$(PWD)/bin
+
 LD_FLAGS="-w -X $(REPO_PATH)/version.Version=$(VERSION)"
 
 build: bin/yaya
 
 bin/yaya:
 	@mkdir -p bin/
-	@go install -v -ldflags $(LD_FLAGS) $(REPO_PATH)/cmd
+	@go install -v -ldflags $(LD_FLAGS) $(REPO_PATH)/cmd/yaya
+
+clean:
+	@rm -rf bin/
