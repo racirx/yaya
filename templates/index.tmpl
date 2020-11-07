@@ -86,12 +86,12 @@
         <label>
             Original Value:
         </label>
-        <input type="number" name="old" value="{{ .Old }}" autofocus/>
+        <input type="number" name="old" value="{{ .Old }}" step=".01" autofocus/>
         <br>
         <label>
             New Value:
         </label>
-        <input type="number" name="new" value="{{ .New }}"/>
+        <input type="number" name="new" value="{{ .New }}" step=".01"/>
         <br>
         {{ if .Err }}
             <br>
