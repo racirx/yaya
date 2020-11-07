@@ -11,14 +11,18 @@
         font-family: Arial, Helvetica, sans-serif;
     }
 
-    input[type=text] {
+    input[type=text],
+    input[type=number]  {
         width: 100%;
         padding: 12px 20px;
         margin: 8px 0;
         box-sizing: border-box;
         font-size: 1em;
+        -moz-appearance:textfield; /* Firefox */
     }
-    input[type=button], input[type=submit], input[type=reset] {
+    input[type=button],
+    input[type=submit],
+    input[type=reset]{
         background-color: #4CAF50;
         border: none;
         color: white;
@@ -27,6 +31,12 @@
         cursor: pointer;
         width: 100%;
         font-size: 1em;
+    }
+    input::-webkit-outer-spin-button,
+    input::-webkit-inner-spin-button {
+        /* display: none; <- Crashes Chrome on hover */
+        -webkit-appearance: none;
+        margin: 0; /* <-- Apparently some margin are still there even though it's hidden */
     }
 
     .container {
@@ -76,12 +86,12 @@
         <label>
             Original Value:
         </label>
-        <input type="text" name="old" value="{{ .Old }}" autofocus/>
+        <input type="number" name="old" value="{{ .Old }}" autofocus/>
         <br>
         <label>
             New Value:
         </label>
-        <input type="text" name="new" value="{{ .New }}"/>
+        <input type="number" name="new" value="{{ .New }}"/>
         <br>
         {{ if .Err }}
             <br>
