@@ -54,22 +54,18 @@
     <form action="/" method="post">
         <label>
             Original Value:
-            {{ if .OldErr }}
-                <br>
-                <div class="error">{{ .OldErr }}</div>
-            {{ end }}
         </label>
         <input type="text" name="old" value="{{ .Old }}" autofocus/>
         <br>
         <label>
             New Value:
-            {{ if .NewErr }}
-                <br>
-                <div class="error">{{ .NewErr }}</div>
-            {{ end }}
         </label>
         <input type="text" name="new" value="{{ .New }}"/>
         <br>
+        {{ if .Err }}
+            <br>
+            <div class="error">{{ .Err }}</div>
+        {{ end }}
         <input type="submit" value="Calculate"/>
     </form>
     <div class="answer">

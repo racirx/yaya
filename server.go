@@ -5,7 +5,6 @@ import (
 	"github.com/gin-gonic/gin"
 	"log"
 	"net/http"
-	"strconv"
 )
 
 type ServerConfig struct {
@@ -23,10 +22,14 @@ type Server struct {
 
 type message struct {
 	Old    string
-	OldErr string
 	New    string
-	NewErr string
+	Err    string
 	Answer string
+}
+
+type Form struct {
+	Old float64 `form:"old" binding:"required,number"`
+	New float64 `form:"new" binding:"required,number"`
 }
 
 func (s *Server) Initialize(conf *Config) {
@@ -41,31 +44,22 @@ func (s *Server) Initialize(conf *Config) {
 	})
 
 	r.POST("/", func(c *gin.Context) {
-		var err error
-		var oldF, newF float64
 		msg := new(message)
+		form := new(Form)
 
-		oldVal := c.PostForm("old")
-		newVal := c.PostForm("new")
-		if oldF, err = strconv.ParseFloat(oldVal, 64); err != nil {
-			msg.OldErr = "Value must be a number"
-		}
-
-		if newF, err = strconv.ParseFloat(newVal, 64); err != nil {
-			msg.NewErr = "Value must be a number"
-		}
-
-		if msg.OldErr != "" || msg.NewErr != "" {
+		if err := c.ShouldBind(form); err != nil {
+			log.Printf("post route: %v\n", err)
+			msg.Err = "Values must be a number"
 			c.HTML(http.StatusBadRequest, "index.tmpl", msg)
 			return
 		}
 
-		diff := oldF - newF
-		perc := diff / oldF
+		diff := form.Old - form.New
+		perc := diff / form.Old
 		answ := fmt.Sprintf("%.2f", perc*100)
 		msg.Answer = answ
-		msg.Old = oldVal
-		msg.New = newVal
+		msg.Old = fmt.Sprintf("%.2f", form.Old)
+		msg.New = fmt.Sprintf("%.2f", form.New)
 
 		log.Printf("answer: %s\n", msg.Answer)
 
